@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scrapingsubsystem"
-version = "0.1.5"
+version = "0.1.6"
 description = "scraping subsystem library for airflow"
 authors = ["DieNice <DailyPlanning@bk.ru>"]
 

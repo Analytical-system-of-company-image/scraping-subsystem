@@ -8,13 +8,13 @@ from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 
-from kafka_handler.kafka_handler import TopicHandler, result_converter
-from scraper.spiders.flamp_spider import (FlampSpider,
-                                          GeneratorStartUrlFlampSpider)
-from sentiment_analyzer.analyzer import SentimentAnalyzer
-from sentiment_analyzer.text_cleaner import (BaseTextCleaner, HtmlTextCleaner,
-                                             InvisibleSymbolsTextCleaner,
-                                             StopWordsTextCleaner)
+from scraping_subsystem.kafka_handler.kafka_handler import (TopicHandler,
+                                                            result_converter)
+from scraping_subsystem.scraper.spiders.flamp_spider import (
+    FlampSpider, GeneratorStartUrlFlampSpider)
+from scraping_subsystem.sentiment_analyzer.analyzer import SentimentAnalyzer
+from scraping_subsystem.sentiment_analyzer.text_cleaner import (
+    HtmlTextCleaner, InvisibleSymbolsTextCleaner, StopWordsTextCleaner)
 
 
 def extract_reviews(spider: Spider, spider_settings: Dict = None,

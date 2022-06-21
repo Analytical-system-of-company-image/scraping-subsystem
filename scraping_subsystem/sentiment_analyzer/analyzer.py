@@ -7,9 +7,8 @@ import fasttext
 from dostoevsky.models import FastTextSocialNetworkModel
 from dostoevsky.tokenization import RegexTokenizer
 from nltk import download as nltk_download
+from scraping_subsystem.sentiment_analyzer.text_cleaner import BaseTextCleaner
 from tqdm import tqdm
-
-from sentiment_analyzer.text_cleaner import BaseTextCleaner
 
 
 class SentimentAnalyzer:

@@ -2,7 +2,9 @@ import re
 from typing import List
 
 import requests
-from scraper.items import Review
+from scraping_subsystem.scraper.items import Review
+from scraping_subsystem.scraper.spiders.generator_start_urls import \
+    BaseGeneratorStartUrl
 from scrapy.spiders.sitemap import Spider
 
 
@@ -30,7 +32,7 @@ class FlampSpider(Spider):
         return review
 
 
-class GeneratorStartUrlFlampSpider:
+class GeneratorStartUrlFlampSpider(BaseGeneratorStartUrl):
     """Генератор стартовых ссылок для краулера flamp.ru
     """
 
