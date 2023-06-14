@@ -3,13 +3,10 @@ import logging
 import tempfile
 from typing import Dict
 
-from kafka import KafkaProducer
 from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 
-from scraping_subsystem.kafka_handler.kafka_handler import (TopicHandler,
-                                                            result_converter)
 from scraping_subsystem.scraper.spiders.flamp_spider import (
     FlampSpider, GeneratorStartUrlFlampSpider)
 from scraping_subsystem.sentiment_analyzer.analyzer import SentimentAnalyzer
@@ -68,34 +65,6 @@ def calculation_sentiment_marks(reviews: str) -> str:
     return sentiment_analyzer.analyze(reviews)
 
 
-def load_to_kafka(data_reviews: str, key: str,
-                  kafka_address: str,
-                  name_topic: str = "reviews") -> None:
-    """Загружает результаты в Кафку
-
-    Args:
-        data_reviews (str): Отзывы с оценками
-        key (str): Ключ пакета
-        kafka_address (str): адресс Кафки
-        name_topic (str, optional): _description_. Defaults to "reviews".
-    """
-    records = json.loads(data_reviews)
-
-    TopicHandler.create_topic(name_topic, kafka_address)
-    producer = KafkaProducer(
-        bootstrap_servers=[kafka_address], compression_type='gzip',
-        value_serializer=lambda v: json.dumps(
-            v, default=result_converter).encode('utf-8')
-    )
-
-    for record in records:
-        producer.send(topic=name_topic,
-                      key=bytes(f"{key}", 'utf-8'), value=record).get(timeout=10)
-    producer.flush()
-    logging.info(
-        f"Loaded {len(records)} unmatched results {key} to Apache Kafka")
-
-
 if __name__ == '__main__':
     logging.basicConfig(
         level=logging.NOTSET,
@@ -105,9 +74,8 @@ if __name__ == '__main__':
     )
 
     generator_start_urls = GeneratorStartUrlFlampSpider(
-        'kfc_set_restoranov_bystrogo_obsluzhivaniya')
+        'kfc_restoran_bystrogo_obsluzhivaniya')
     start_urls = generator_start_urls.get_reviews_start_url()
     reviews = extract_reviews(FlampSpider, crawl_settings={
                               'start_urls': start_urls[:100]})
     reviews = calculation_sentiment_marks(reviews)
-    load_to_kafka(reviews, 'flamp.ru/kfc', 'localhost:9092')
