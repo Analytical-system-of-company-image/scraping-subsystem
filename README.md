@@ -1,6 +1,8 @@
 # ScrapingSubsystem
 Airflow with Scrapy
 
+This library for [DAG's Apache Airflow](https://github.com/Analytical-system-of-company-image/asci-airflow) with little crawlers for scarping reviews from some websites about companies.
+
 ## Pull of websites
 
 Пул источников можно разделить на три категории в зависимости от источников создания этих отзывов (курсивом выделены наиболее интересные):
@@ -52,19 +54,21 @@ Airflow with Scrapy
 1. irecommend.ru (в целом большинство отзывов от клиентов, но также встречаются отзывы от работников)
 
 
-python3 -m nltk.downloader all
-python -m dostoevsky download fasttext-social-network-model
-
-# Web Crawler
-
-Scraping web sites with company reviews and analyzes sentiment
-
 ***
 
-### *Data flow diagram for subsystem of scraping*
-![DFD](docs/DFD.jpg)
+## How deploy dev environment
 
-## *Data flow diagram for sybsystem of analying sentiment*
+```bash
+poetry install
+pip install dostoevsky==0.6.0
+python3 -m nltk.downloader all
+python -m dostoevsky download fasttext-social-network-model
+```
 
-![image](https://user-images.githubusercontent.com/25473820/138546982-87de9bc5-6038-41dd-af20-4ca7fe4b4e5b.png)
+## How to public to Pypi
+First you need create api on pypi
 
+```bash
+poetry config pypi-token.pypi $(cat .token)
+poetry publish --build
+```
