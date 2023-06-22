@@ -12,6 +12,7 @@ from scraping_subsystem.scraper.spiders.flamp_spider import (
 from scraping_subsystem.sentiment_analyzer.analyzer import SentimentAnalyzer
 from scraping_subsystem.sentiment_analyzer.text_cleaner import (
     HtmlTextCleaner, InvisibleSymbolsTextCleaner, StopWordsTextCleaner)
+from scraping_subsystem.scraper.spiders.otzovik_spider import OtzovikSpider
 
 
 def extract_reviews(spider: Spider, spider_settings: Dict = None,
@@ -65,17 +66,28 @@ def calculation_sentiment_marks(reviews: str) -> str:
     return sentiment_analyzer.analyze(reviews)
 
 
-if __name__ == '__main__':
-    logging.basicConfig(
-        level=logging.NOTSET,
-        filename="crawler_logs.log",
-        format="%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s",
-        datefmt='%H:%M:%S',
-    )
-
+def debug_flamp_ru():
     generator_start_urls = GeneratorStartUrlFlampSpider(
         'kfc_restoran_bystrogo_obsluzhivaniya')
     start_urls = generator_start_urls.get_reviews_start_url()
     reviews = extract_reviews(FlampSpider, crawl_settings={
                               'start_urls': start_urls[:100]})
     reviews = calculation_sentiment_marks(reviews)
+
+
+def debug_otzovik_ru():
+    start_urls = [
+        "https://otzovik.com/reviews/set_sportivnih_magazinov_sportmaster_ukraina_kiev/2"]
+    reviews = extract_reviews(OtzovikSpider, crawl_settings={
+                              'start_urls': start_urls[:100]})
+    reviews = calculation_sentiment_marks(reviews)
+
+
+if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.NOTSET,
+        filename="crawler_logs.log",
+        format="%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s",
+        datefmt='%H:%M:%S')
+        
+    debug_otzovik_ru()
